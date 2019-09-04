@@ -36,29 +36,17 @@ private TextView textViewProgress;
                 //set 10 second count down timer
                 //display how much time is left on the countdown on the button
                 //when the timer is complete, call the finish method to close the activity
-                new CountDownTimer(10000, 100) {
+                new CountDownTimer(10000, 300) {
+                    int counter = 0;
+                    int multiplier = 0;
+                    boolean colored = false;
+                    int subtract = 1;
 
-                    private long tick;
                     @Override
                     public void onTick(long l) {
                         selfDestruct.setText(String.valueOf((int)(l/1000)+1));
-                        tick = l;
-                        new CountDownTimer(tick/10, tick/10) {
-                            @Override
-                            public void onTick(long l) {
-                                int r = 255;
-                                int b = 0;
-                                int g = 0;
-                                constraintLayout.setBackgroundColor(Color.rgb(r,g,b));
 
-                            }
 
-                            @Override
-                            public void onFinish() {
-                                constraintLayout.setBackgroundColor(Color.rgb(255,255,255));
-                            }
-                        }.start();
-                        tick = l;
                     }
 
                     @Override
@@ -72,6 +60,30 @@ private TextView textViewProgress;
         lookBusy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                lookBusy.setVisibility(View.GONE);
+                uselessSwitch.setVisibility(View.GONE);
+                selfDestruct.setVisibility(View.GONE);
+                progress.setVisibility(View.VISIBLE);
+                textViewProgress.setVisibility(View.VISIBLE);
+
+                new CountDownTimer(5000, 47) {
+                    @Override
+                    public void onTick(long l) {
+                        progress.incrementProgressBy(1);
+                        textViewProgress.setText(String.valueOf(progress.getProgress())+ "%");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        lookBusy.setVisibility(View.VISIBLE);
+                        uselessSwitch.setVisibility(View.VISIBLE);
+                        selfDestruct.setVisibility(View.VISIBLE);
+                        progress.setVisibility(View.GONE);
+                        textViewProgress.setVisibility(View.GONE);
+                        progress.setProgress(0);
+
+                    }
+                }.start();
 
             }
         });
