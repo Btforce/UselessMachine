@@ -43,19 +43,47 @@ private TextView textViewProgress;
                     int subtract = 1;
 
                     @Override
-                    public void onTick(long l) {
-                        selfDestruct.setText(String.valueOf((int)(l/1000)+1));
-
-
+                    public void onFinish() {
+                        finish();
                     }
 
                     @Override
-                    public void onFinish() {
-                        finish();
+                    public void onTick(long l) {
+                        selfDestruct.setText(String.valueOf((int) (l / 1000) + 1));
+                        counter++;
+                        if (l / 1000 % 5 == 0) {
+                            multiplier++;
+                            subtract = 30 * multiplier;
+                        }
+                        if (!colored && counter % 2 == 0) {
+                            new CountDownTimer(300 - subtract, 300 - subtract) {
+
+                                @Override
+                                public void onTick(long l) {
+                                    int red = 255;
+                                    int blue = 0;
+                                    int green = 0;
+                                    int r = Color.rgb(red, green, blue);
+                                    constraintLayout.setBackgroundColor(r);
+                                    colored = true;
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    int r = 255;
+                                    int b = 255;
+                                    int g = 255;
+                                    int original = Color.rgb(r,g,b);
+                                    constraintLayout.setBackgroundColor(original);
+                                    colored = false;
+                                }
+                            }.start();
+                        }
                     }
                 }.start();
             }
         });
+
 
         lookBusy.setOnClickListener(new View.OnClickListener() {
             @Override
